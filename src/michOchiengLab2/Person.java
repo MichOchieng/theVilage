@@ -17,8 +17,7 @@ public class Person {
     private boolean isDead;
     private static int populationAlive;
     private static int populationDead;
-    private static ArrayList<String> theLiving;
-    private static ArrayList<String> theDead;
+    private static final ArrayList<Person> theLiving = new ArrayList();
     
     
     public Person(String n){
@@ -26,25 +25,20 @@ public class Person {
         isDead = false;
         murderedBy = null;        
         populationAlive++;
+        theLiving.add(this);
     }
-    
-//    public void allSayHi(){
-//        for(int i = 0; i<theLiving.length;i++){
-//            System.out.println(theLiving.get(i) + " says hello!");
-//        }
-//    }    
     
     public String murderer(){
         if(isDead){
-            return murderedBy;
+            return name + " was murdered by " + murderedBy;
         }
         else
-            return name + " is still alive.";
+            return name + " is still alive, for now.";
     }
     
     public String name(){
         if(isDead){
-            return name + "-dececed";
+            return name + "-deceased";
         }
         else
             return name;
@@ -52,10 +46,13 @@ public class Person {
     
     public boolean isAlive(){
         if(isDead){
+            System.out.println(name + " is dead.");
             return false;
         }
-        else 
+        else{
+            System.out.println(name + " is alive for now.");
             return true;
+        }
     }
     
     public void die(){
@@ -64,7 +61,7 @@ public class Person {
         }
         else{
             isDead = true;
-//            ADD - remove from theLiving list and removal from theDead list
+            theLiving.remove(this);            
             System.out.println(name + ": oof!");
             populationAlive--;
             populationDead++;
@@ -72,7 +69,11 @@ public class Person {
     }    
     
     public void sayHi(){
-        System.out.println(name + " says hello to you.");
+        if(isDead){
+            System.out.println("...");
+        }else{
+            System.out.println("Hello my name is " + name);
+        }
     }
     
     public static int numberLiving(){
@@ -83,9 +84,20 @@ public class Person {
         return populationDead;
     }
     
-    public static void main(String[] args){
-        Person momo = new Person("Mich"); 
-        momo.sayHi();
+    public static void allSayHi(){
+        for(int i = 0;i<theLiving.size();i++){
+           theLiving.get(i).sayHi();
+        }
     }
     
+    public void murder(Person x){
+        if(!isDead){
+          x.murderedBy = name;
+          x.die();
+        }else{
+            System.out.println("Ghosts cannot kill people in this story.");
+        }
+            
+    }   
+     
 }
